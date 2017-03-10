@@ -17,3 +17,9 @@ None at present.
 ## Release Notes
 
 Currently supports basic syntax highlighting (symbols, constants, keywords).
+
+## Develop
+
+Run:
+
+    code --extensionDevelopmentPath=path/to/vscode-efene-support
