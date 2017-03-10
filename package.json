@@ -1,0 +1,27 @@
+{
+    "name": "efene",
+    "displayName": "Efene",
+    "description": "Syntax highlighting for Efene, a language for the Erlang VM",
+    "version": "0.0.1",
+    "publisher": "marianoguerra",
+    "repository": "https://github.com/efene/vscode-efene-support",
+    "engines": {
+        "vscode": "^1.5.0"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "efene",
+            "aliases": ["Efene", "efene"],
+            "extensions": [".fn"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "efene",
+            "scopeName": "source.efene",
+            "path": "./syntaxes/efene.tmLanguage.json"
+        }]
+    }
+}

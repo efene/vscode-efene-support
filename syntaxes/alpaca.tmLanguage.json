@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Efene",
+  "fileTypes": ["fn"],
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#binary-strings"
+    },
+    {
+      "match": "^[A-Z_][A-Za-z0-9_]*\\s+",
+      "name": "entity.name.variable.efene"
+    },  
+    {
+      "match": "(\\b([0-9]+)\\b)",
+      "name": "constant.numeric.efene"
+    },
+    {
+      "match": "[a-z][A-Za-z0-9_]+",
+      "name": "constant.language.efene",
+      "comment": "atoms, i.e. :value"
+    },
+    {
+      "match": "[|!%$?~+\\-.=</>&\\\\*^]+\\s+",
+      "name": "keyword.operator.efene"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.efene",
+          "match": "\\b(after|begin|case|catch|do|else|end|fn|for|if|in|match|receive|try|when|def|cond|let|of)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.efene",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.efene",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "binary-strings": {
+      "name": "string.quoted.single.efene",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.efene",
+          "match": "\\\\."
+        }
+      ]
+    }
+  },
+  "scopeName": "source.efene"
+}
