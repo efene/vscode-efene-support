@@ -13,20 +13,28 @@
       "include": "#binary-strings"
     },
     {
-      "match": "^[A-Z_][A-Za-z0-9_]*\\s+",
+      "match": "\\b[A-Z_][A-Za-z0-9_]*\\b",
       "name": "entity.name.variable.efene"
+    },  
+    {
+      "match": "\\b@[a-z][A-Za-z0-9@_.]*\\b",
+      "name": "keyword.name.attribute.efene"
     },  
     {
       "match": "(\\b([0-9]+)\\b)",
       "name": "constant.numeric.efene"
     },
     {
-      "match": "[a-z][A-Za-z0-9_]+",
+      "match": "\\b#[a-z][A-Za-z0-9@_]*\\b",
+      "name": "keyword.tag.efene"
+    },
+    {
+      "match": "\\b[a-z][A-Za-z0-9@_]+\\b",
       "name": "constant.language.efene",
       "comment": "atoms, i.e. :value"
     },
     {
-      "match": "[|!%$?~+\\-.=</>&\\\\*^]+\\s+",
+      "match": "\\b[|!%$?~+\\-.=</>&\\\\*^]+\\b",
       "name": "keyword.operator.efene"
     }
   ],
