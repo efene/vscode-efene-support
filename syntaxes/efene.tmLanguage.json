@@ -62,8 +62,32 @@
             "name": "constant.other.tag.fn"
         },
         "attribute": {
-            "match": "@[[:lower:]][[:alnum:]@_\\.]*",
-            "name": "variable.other.attr.fn"
+            "patterns": [
+                {
+                    "name": "variable.other.attr.fn",
+                    "begin": "(@)([[:lower:]][[:alnum:]_]*)\\s*(\\()",
+                    "beginCaptures": {
+                        "1": {"name": "punctuation.definition.attribute.fn"},
+                        "2": {"name": "meta.attribute.fn"},
+                        "3": {"name": "punctuation.definition.parameters.begin.fn"}
+                    },
+                    "end": "(\\))",
+                    "endCaptures": {
+                        "1": {"name": "punctuation.definition.parameters.end.fn"}
+                    },
+                    "patterns": [
+                        {
+                            "match": ",",
+                            "name": "punctuation.separator.parameters.fn"
+                        },
+                        {"include": "$self"}
+                    ]
+                },
+                {
+                    "match": "@[[:lower:]][[:alnum:]@_\\.]*",
+                    "name": "variable.other.attr.fn"
+                }
+            ]
         },
         "strings": {
             "name": "string.quoted.double.efene",
