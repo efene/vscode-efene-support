@@ -173,14 +173,14 @@
     },
 
     "textual-operator": {
-      "match": "\\b(andd|and|xor|orr|or|not)\\b",
+      "match": "\\b(andd|and|xor|orr|or|not|is|isnt)\\b",
       "name": "keyword.operator.textual.erlang"
     },
 
     "symbolic-operator": {
       "patterns": [
         {
-          "match": "\\+\\+|\\+|--|-|\\*|!=|/|!==|===|==|<=|=|<|>=|>|!|//|%|\\^|&",
+          "match": "\\+\\+|\\+|--|-|\\*|!=|/|==|<=|=|<|>=|>|!|//|%|\\^|&|\\||~|<-|<<-|->|->>",
           "name": "keyword.operator.symbolic.fn"
         }
       ]
