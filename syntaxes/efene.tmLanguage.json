@@ -4,16 +4,16 @@
     "fileTypes": ["fn"],
     "patterns": [
         {"include": "#keywords"},
-        {"include": "#variable"},
-        {"include": "#atom"},
-        {"include": "#number"},
-        {"include": "#strings"},
-        {"include": "#binary-strings"},
+        {"include": "#function-call"},
         {"include": "#tuple"},
         {"include": "#list"},
         {"include": "#tag-value"},
+        {"include": "#atom"},
+        {"include": "#strings"},
+        {"include": "#binary-strings"},
+        {"include": "#variable"},
+        {"include": "#number"},
         {"include": "#attribute"},
-        {"include": "#function-call"},
         {"include": "#symbolic-operator"}
     ],
     "repository": {
@@ -35,6 +35,7 @@
         "atom": {
             "patterns": [
                 {
+                    "name": "constant.other.symbol.quoted.single.fn",
                     "begin": "(`)",
                     "beginCaptures": {
                         "1": {"name": "punctuation.definition.string.symbol.begin.fn"}
@@ -43,7 +44,6 @@
                     "endCaptures": {
                         "1": {"name": "punctuation.definition.string.symbol.end.fn"}
                     },
-                    "name": "constant.other.symbol.quoted.single.fn",
                     "patterns": [
                         {
                             "match": "\\\\\\^?.?",
@@ -58,13 +58,17 @@
             ]
         },
         "tag-value": {
-            "match": "#[[:lower:]][[:alnum:]@_\\.]*",
-            "name": "constant.other.tag.fn"
+            "name": "constant.other.tag.fn",
+            "match": "(#)([[:lower:]][[:alnum:]@_\\.]*)",
+            "captures": {
+                "1": {"name": "punctuation.tag.fn"},
+                "2": {"name": "symbol.tag.name.fn"}
+            }
         },
         "attribute": {
             "patterns": [
                 {
-                    "name": "variable.other.attr.fn",
+                    "name": "variable.other.attr.call.fn",
                     "begin": "(@)([[:lower:]][[:alnum:]_]*)\\s*(\\()",
                     "beginCaptures": {
                         "1": {"name": "punctuation.definition.attribute.fn"},
@@ -84,8 +88,12 @@
                     ]
                 },
                 {
-                    "match": "@[[:lower:]][[:alnum:]@_\\.]*",
-                    "name": "variable.other.attr.fn"
+                    "name": "variable.other.attr.tag.fn",
+                    "match": "(@)([[:lower:]][[:alnum:]@_\\.]*)",
+                    "beginCaptures": {
+                        "1": {"name": "punctuation.definition.attribute.fn"},
+                        "2": {"name": "meta.attribute.fn"}
+                    }
                 }
             ]
         },
@@ -214,47 +222,43 @@
         "function-call": {
             "patterns": [
                 {
-                    "begin": "(?=([[:lower:]][[:alnum:]@_]*)\\s*(\\(|\\.\\s*([[:lower:]][[:alnum:]@_]*)\\s*\\())",
+                    "name": "meta.function-call.fn",
+                    "begin": "([[:lower:]][[:alnum:]_]*)(\\.)([[:lower:]][[:alnum:]_]*)\\s*(\\()",
+                    "beginCaptures": {
+                        "1": {"name": "meta.function.module.fn"},
+                        "2": {"name": "punctuation.separator.module-function.fn"},
+                        "3": {"name": "meta.function.fn"},
+                        "4": {"name": "punctuation.definition.parameters.begin.fn"}
+                    },
                     "end": "(\\))",
                     "endCaptures": {
                         "1": {"name": "punctuation.definition.parameters.end.fn"}
                     },
-                    "name": "meta.function-call.fn",
                     "patterns": [
                         {
-                            "begin": "(?:(erlang)\\s*(\\.)\\s*)?(abs|binary_part|bit_size|byte_size|element|float|hd|is_atom|is_binary|is_bitstring|is_boolean|is_float|is_function|is_integer|is_list|is_number|is_pid|is_port|is_record|is_reference|is_tuple|length|node|round|self|size|tl|trunc|tuple_size)\\s*(\\()",
-                                "beginCaptures": {
-                                    "1": {"name": "meta.function.module.fn"},
-                                    "2": {"name": "punctuation.separator.module-function.fn"},
-                                    "3": {"name": "support.function.guard.fn"},
-                                    "4": {"name": "punctuation.definition.parameters.begin.fn"}
-                                },
-                                "end": "(?=\\))",
-                                "patterns": [
-                                    {
-                                        "match": ",",
-                                        "name": "punctuation.separator.parameters.fn"
-                                    },
-                                    {"include": "$self"}
-                                ]
+                            "match": ",",
+                            "name": "punctuation.separator.parameters.fn"
                         },
+                        {"include": "$self"}
+                    ]
+                },
+                {
+                    "name": "meta.function-call.fn",
+                    "begin": "([[:lower:]][[:alnum:]_]*)\\s*(\\()",
+                    "beginCaptures": {
+                        "1": {"name": "meta.function.fn"},
+                        "2": {"name": "punctuation.definition.parameters.begin.fn"}
+                    },
+                    "end": "(\\))",
+                    "endCaptures": {
+                        "1": {"name": "punctuation.definition.parameters.end.fn"}
+                    },
+                    "patterns": [
                         {
-                            "begin": "(?:([[:lower:]][[:alnum:]@_]*)?\\s*(\\.)\\s*)?([[:lower:]][[:alnum:]@_]*)\\s*(\\()",
-                                "beginCaptures": {
-                                    "1": {"name": "meta.function.module.fn"},
-                                    "2": {"name": "punctuation.separator.module-function.fn"},
-                                    "3": {"name": "meta.function.fn"},
-                                    "4": {"name": "punctuation.definition.parameters.begin.fn"}
-                                },
-                                "end": "(?=\\))",
-                                "patterns": [
-                                    {
-                                        "match": ",",
-                                        "name": "punctuation.separator.parameters.fn"
-                                    },
-                                    {"include": "$self"}
-                                ]
-                        }
+                            "match": ",",
+                            "name": "punctuation.separator.parameters.fn"
+                        },
+                        {"include": "$self"}
                     ]
                 }
             ]
