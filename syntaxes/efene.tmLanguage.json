@@ -1,190 +1,240 @@
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "Efene",
-  "fileTypes": ["fn"],
-  "patterns": [
-    {"include": "#keywords"},
-    {"include": "#variable"},
-    {"include": "#atom"},
-    {"include": "#number"},
-    {"include": "#strings"},
-    {"include": "#binary-strings"},
-    {"include": "#tuple"},
-    {"include": "#list"},
-    {"include": "#tag-value"},
-    {"include": "#attribute"},
-    {"include": "#symbolic-operator"}
-  ],
-  "repository": {
-    "keywords": {
-      "patterns": [
-        {
-          "name": "keyword.control.efene",
-          "match": "\\b(after|begin|case|catch|do|else|end|fn|for|if|in|match|receive|try|when|def|cond|let|of|true|false)\\b"
-        }
-      ]
-    },
-    "variable": {
-      "match": "(_[[:alnum:]@_]+|[[:upper:]][[:alnum:]@_]*)|(_)",
-      "captures": {
-        "1": {"name": "variable.other.fn"},
-        "2": {"name": "variable.language.omitted.fn"}
-      }
-    },
-    "atom": {
-      "patterns": [
-        {
-          "begin": "(`)",
-          "beginCaptures": {
-            "1": {"name": "punctuation.definition.string.symbol.begin.fn"}
-          },
-          "end": "(`)",
-          "endCaptures": {
-            "1": {"name": "punctuation.definition.string.symbol.end.fn"}
-          },
-          "name": "constant.other.symbol.quoted.single.fn",
-          "patterns": [
-            {
-              "match": "\\\\\\^?.?",
-              "name": "invalid.illegal.symbol.escape.fn"
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Efene",
+    "fileTypes": ["fn"],
+    "patterns": [
+        {"include": "#keywords"},
+        {"include": "#variable"},
+        {"include": "#atom"},
+        {"include": "#number"},
+        {"include": "#strings"},
+        {"include": "#binary-strings"},
+        {"include": "#tuple"},
+        {"include": "#list"},
+        {"include": "#tag-value"},
+        {"include": "#attribute"},
+        {"include": "#function-call"},
+        {"include": "#symbolic-operator"}
+    ],
+    "repository": {
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.efene",
+                    "match": "\\b(after|begin|case|catch|do|else|end|fn|for|if|in|match|receive|try|when|def|cond|let|of|true|false)\\b"
+                }
+            ]
+        },
+        "variable": {
+            "match": "(_[[:alnum:]@_]+|[[:upper:]][[:alnum:]@_]*)|(_)",
+            "captures": {
+                "1": {"name": "variable.other.fn"},
+                "2": {"name": "variable.language.omitted.fn"}
             }
-          ]
         },
-        {
-          "match": "[[:lower:]][[:alnum:]@_]*",
-          "name": "constant.other.symbol.unquoted.fn"
+        "atom": {
+            "patterns": [
+                {
+                    "begin": "(`)",
+                    "beginCaptures": {
+                        "1": {"name": "punctuation.definition.string.symbol.begin.fn"}
+                    },
+                    "end": "(`)",
+                    "endCaptures": {
+                        "1": {"name": "punctuation.definition.string.symbol.end.fn"}
+                    },
+                    "name": "constant.other.symbol.quoted.single.fn",
+                    "patterns": [
+                        {
+                            "match": "\\\\\\^?.?",
+                            "name": "invalid.illegal.symbol.escape.fn"
+                        }
+                    ]
+                },
+                {
+                    "match": "[[:lower:]][[:alnum:]@_]*",
+                    "name": "constant.other.symbol.unquoted.fn"
+                }
+            ]
+        },
+        "tag-value": {
+            "match": "#[[:lower:]][[:alnum:]@_\\.]*",
+            "name": "constant.other.tag.fn"
+        },
+        "attribute": {
+            "match": "@[[:lower:]][[:alnum:]@_\\.]*",
+            "name": "variable.other.attr.fn"
+        },
+        "strings": {
+            "name": "string.quoted.double.efene",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.efene",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "binary-strings": {
+            "name": "string.quoted.single.efene",
+            "begin": "'",
+            "end": "'",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.efene",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "number": {
+            "begin": "(?=\\d)",
+            "end": "(?!\\d)",
+            "patterns": [
+                {
+                    "captures": {
+                        "1": {"name": "punctuation.separator.integer-float.fn"},
+                        "3": {"name": "punctuation.separator.float-exponent.fn"}
+                    },
+                    "match": "\\d+(\\.)\\d+(([eE][\\+\\-])?\\d+)?",
+                    "name": "constant.numeric.float.fn"
+                },
+                {"include": "#integer"}
+            ]
+        },
+
+        "integer": {
+            "patterns": [
+                {
+                    "match": "\\d+#[\\da-zA-Z]+",
+                    "name": "invalid.illegal.integer.fn"
+                },
+                {
+                    "match": "\\d+",
+                    "name": "constant.numeric.integer.decimal.fn"
+                }
+            ]
+        },
+
+        "tuple": {
+            "begin": "(\\()",
+                "beginCaptures": {
+                    "1": {"name": "punctuation.definition.tuple.begin.fn"}
+                },
+                "end": "(\\))",
+                "endCaptures": {
+                    "1": {"name": "punctuation.definition.tuple.end.fn"}
+                },
+                "name": "meta.structure.tuple.fn",
+                "patterns": [
+                    {
+                        "match": ",",
+                        "name": "punctuation.separator.tuple.fn"
+                    },
+                    {"include": "$self"}
+                ]
+        },
+
+        "list": {
+            "begin": "(\\[)",
+                "beginCaptures": {
+                    "1": {"name": "punctuation.definition.list.begin.fn"}
+                },
+                "end": "(\\])",
+                "endCaptures": {
+                    "1": {"name": "punctuation.definition.list.end.fn"}
+                },
+                "name": "meta.structure.list.fn",
+                "patterns": [
+                    {
+                        "match": "::|,",
+                        "name": "punctuation.separator.list.fn"
+                    },
+                    {"include": "$self"}
+                ]
+        },
+
+        "map": {
+            "begin": "(\\{)",
+                "beginCaptures": {
+                    "1": {"name": "punctuation.definition.map.begin.fn"}
+                },
+                "end": "(\\})",
+                "endCaptures": {
+                    "1": {"name": "punctuation.definition.map.end.fn"}
+                },
+                "name": "meta.structure.map.fn",
+                "patterns": [
+                    {
+                        "match": ":|,|=",
+                        "name": "punctuation.separator.map.fn"
+                    },
+                    {"include": "$self"}
+                ]
+        },
+
+        "textual-operator": {
+            "match": "\\b(andd|and|xor|orr|or|not|is|isnt)\\b",
+            "name": "keyword.operator.textual.fn"
+        },
+
+        "symbolic-operator": {
+            "patterns": [
+                {
+                    "match": "\\+\\+|\\+|--|-|\\*|!=|/|==|<=|=|<|>=|>|!|//|%|\\^|&|\\||~|<-|<<-|->|->>",
+                    "name": "keyword.operator.symbolic.fn"
+                }
+            ]
+        },
+
+        "function-call": {
+            "patterns": [
+                {
+                    "begin": "(?=([[:lower:]][[:alnum:]@_]*)\\s*(\\(|\\.\\s*([[:lower:]][[:alnum:]@_]*)\\s*\\())",
+                    "end": "(\\))",
+                    "endCaptures": {
+                        "1": {"name": "punctuation.definition.parameters.end.fn"}
+                    },
+                    "name": "meta.function-call.fn",
+                    "patterns": [
+                        {
+                            "begin": "(?:(erlang)\\s*(\\.)\\s*)?(abs|binary_part|bit_size|byte_size|element|float|hd|is_atom|is_binary|is_bitstring|is_boolean|is_float|is_function|is_integer|is_list|is_number|is_pid|is_port|is_record|is_reference|is_tuple|length|node|round|self|size|tl|trunc|tuple_size)\\s*(\\()",
+                                "beginCaptures": {
+                                    "1": {"name": "meta.function.module.fn"},
+                                    "2": {"name": "punctuation.separator.module-function.fn"},
+                                    "3": {"name": "support.function.guard.fn"},
+                                    "4": {"name": "punctuation.definition.parameters.begin.fn"}
+                                },
+                                "end": "(?=\\))",
+                                "patterns": [
+                                    {
+                                        "match": ",",
+                                        "name": "punctuation.separator.parameters.fn"
+                                    },
+                                    {"include": "$self"}
+                                ]
+                        },
+                        {
+                            "begin": "(?:([[:lower:]][[:alnum:]@_]*)?\\s*(\\.)\\s*)?([[:lower:]][[:alnum:]@_]*)\\s*(\\()",
+                                "beginCaptures": {
+                                    "1": {"name": "meta.function.module.fn"},
+                                    "2": {"name": "punctuation.separator.module-function.fn"},
+                                    "3": {"name": "meta.function.fn"},
+                                    "4": {"name": "punctuation.definition.parameters.begin.fn"}
+                                },
+                                "end": "(?=\\))",
+                                "patterns": [
+                                    {
+                                        "match": ",",
+                                        "name": "punctuation.separator.parameters.fn"
+                                    },
+                                    {"include": "$self"}
+                                ]
+                        }
+                    ]
+                }
+            ]
         }
-      ]
     },
-    "tag-value": {
-      "match": "#[[:lower:]][[:alnum:]@_\\.]*",
-      "name": "constant.other.tag.fn"
-    },
-    "attribute": {
-      "match": "@[[:lower:]][[:alnum:]@_\\.]*",
-      "name": "variable.other.attr.fn"
-    },
-    "strings": {
-      "name": "string.quoted.double.efene",
-      "begin": "\"",
-      "end": "\"",
-      "patterns": [
-        {
-          "name": "constant.character.escape.efene",
-          "match": "\\\\."
-        }
-      ]
-    },
-    "binary-strings": {
-      "name": "string.quoted.single.efene",
-      "begin": "'",
-      "end": "'",
-      "patterns": [
-        {
-          "name": "constant.character.escape.efene",
-          "match": "\\\\."
-        }
-      ]
-    },
-    "number": {
-      "begin": "(?=\\d)",
-      "end": "(?!\\d)",
-      "patterns": [
-        {
-          "captures": {
-            "1": {"name": "punctuation.separator.integer-float.fn"},
-            "3": {"name": "punctuation.separator.float-exponent.fn"}
-          },
-          "match": "\\d+(\\.)\\d+(([eE][\\+\\-])?\\d+)?",
-          "name": "constant.numeric.float.fn"
-        },
-        {"include": "#integer"}
-      ]
-    },
-
-    "integer": {
-      "patterns": [
-        {
-          "match": "\\d+#[\\da-zA-Z]+",
-          "name": "invalid.illegal.integer.fn"
-        },
-        {
-          "match": "\\d+",
-          "name": "constant.numeric.integer.decimal.fn"
-        }
-      ]
-    },
-
-    "tuple": {
-      "begin": "(\\()",
-      "beginCaptures": {
-        "1": {"name": "punctuation.definition.tuple.begin.fn"}
-      },
-      "end": "(\\))",
-      "endCaptures": {
-        "1": {"name": "punctuation.definition.tuple.end.fn"}
-      },
-      "name": "meta.structure.tuple.fn",
-      "patterns": [
-        {
-          "match": ",",
-          "name": "punctuation.separator.tuple.fn"
-        },
-        {"include": "$self"}
-      ]
-    },
-
-    "list": {
-      "begin": "(\\[)",
-      "beginCaptures": {
-        "1": {"name": "punctuation.definition.list.begin.fn"}
-      },
-      "end": "(\\])",
-      "endCaptures": {
-        "1": {"name": "punctuation.definition.list.end.fn"}
-      },
-      "name": "meta.structure.list.fn",
-      "patterns": [
-        {
-          "match": "::|,",
-          "name": "punctuation.separator.list.fn"
-        },
-        {"include": "$self"}
-      ]
-    },
-
-    "map": {
-      "begin": "(\\{)",
-      "beginCaptures": {
-        "1": {"name": "punctuation.definition.map.begin.fn"}
-      },
-      "end": "(\\})",
-      "endCaptures": {
-        "1": {"name": "punctuation.definition.map.end.fn"}
-      },
-      "name": "meta.structure.map.fn",
-      "patterns": [
-        {
-          "match": ":|,|=",
-          "name": "punctuation.separator.map.fn"
-        },
-        {"include": "$self"}
-      ]
-    },
-
-    "textual-operator": {
-      "match": "\\b(andd|and|xor|orr|or|not|is|isnt)\\b",
-      "name": "keyword.operator.textual.erlang"
-    },
-
-    "symbolic-operator": {
-      "patterns": [
-        {
-          "match": "\\+\\+|\\+|--|-|\\*|!=|/|==|<=|=|<|>=|>|!|//|%|\\^|&|\\||~|<-|<<-|->|->>",
-          "name": "keyword.operator.symbolic.fn"
-        }
-      ]
-    }
-  },
-  "scopeName": "source.efene"
+    "scopeName": "source.efene"
 }
