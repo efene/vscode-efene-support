@@ -3,6 +3,8 @@
     "name": "Efene",
     "fileTypes": ["fn"],
     "patterns": [
+        {"include": "#boolean"},
+        {"include": "#expression"},
         {"include": "#keywords"},
         {"include": "#function-call"},
         {"include": "#tuple"},
@@ -17,11 +19,15 @@
         {"include": "#symbolic-operator"}
     ],
     "repository": {
+        "boolean": {
+            "match": "\\b(true|false)\\b",
+            "name": "constant.language.boolean.fn"
+        },
         "keywords": {
             "patterns": [
                 {
                     "name": "keyword.control.efene",
-                    "match": "\\b(after|begin|case|catch|do|else|end|fn|for|if|in|match|receive|try|when|def|cond|let|of|true|false)\\b"
+                    "match": "\\b(after|begin|case|catch|do|else|end|fn|for|if|in|match|receive|try|when|def|cond|let|of)\\b"
                 }
             ]
         },
@@ -35,7 +41,7 @@
         "atom": {
             "patterns": [
                 {
-                    "name": "constant.other.symbol.quoted.single.fn",
+                    "name": "constant.other.atom.quoted.single.fn",
                     "begin": "(`)",
                     "beginCaptures": {
                         "1": {"name": "punctuation.definition.string.symbol.begin.fn"}
@@ -53,7 +59,7 @@
                 },
                 {
                     "match": "[[:lower:]][[:alnum:]@_]*",
-                    "name": "constant.other.symbol.unquoted.fn"
+                    "name": "constant.other.atom.unquoted.fn"
                 }
             ]
         },
@@ -124,12 +130,12 @@
             "end": "(?!\\d)",
             "patterns": [
                 {
+                    "name": "constant.numeric.float.fn",
+                    "match": "\\d+(\\.)\\d+(([eE][\\+\\-])?\\d+)?",
                     "captures": {
                         "1": {"name": "punctuation.separator.integer-float.fn"},
                         "3": {"name": "punctuation.separator.float-exponent.fn"}
-                    },
-                    "match": "\\d+(\\.)\\d+(([eE][\\+\\-])?\\d+)?",
-                    "name": "constant.numeric.float.fn"
+                    }
                 },
                 {"include": "#integer"}
             ]
@@ -261,6 +267,51 @@
                         {"include": "$self"}
                     ]
                 }
+            ]
+        },
+        "expression": {
+            "patterns": [
+                {"include": "#when"}
+            ]
+        },
+        "when": {
+            "name": "meta.expression.if.fn",
+            "begin": "\\b(when)\\b",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.if.fn"}
+            },
+            "end": "\\b(end|else)\\b",
+            "endCaptures": {
+                "1": {"name": "keyword.control.end.fn"}
+            },
+            "patterns": [
+                {
+                    "name": "meta.guard-expression.fn",
+                    "begin": "(?<=when|;)",
+                    "end": "(?=:)",
+                    "patterns": [
+                        {"include": "$self"}
+                    ]
+                },
+                {
+                    "begin": "(:)",
+                    "beginCaptures": {
+                        "1": {"name": "punctuation.separator.clause-head-body.fn"}
+                    },
+                    "end": "(?=\\b(else|end)\\b)",
+                    "patterns": [
+                        {"include": "#internal-expression-list"}
+                    ]
+                }
+            ]
+        },
+        "internal-expression-list": {
+            "patterns": [
+                {
+                    "match": ",",
+                    "name": "punctuation.separator.expressions.erlang"
+                },
+                {"include": "$self"}
             ]
         }
     },
